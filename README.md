@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Weather Dashboard
 
-## Getting Started
+A modern, responsive weather dashboard built with Next.js, TypeScript, and Tailwind CSS. Search for real-time weather and 5-day forecasts for any city worldwide.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
+- **Real-time weather data** for any city
+- **5-day weather forecast**
+- **Temperature unit toggle** (Celsius/Fahrenheit)
+- **Search history** (last 5 searches, persisted)
+- **Clear history** button
+- **Dark mode** toggle
+- **Loading spinner** and clear error handling
+- **Weather icons** with image optimization
+- **Keyboard accessible** and accessible for screen readers
+- **Animated transitions** for a polished UI
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
+- [Next.js 15](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Zustand](https://zustand-demo.pmnd.rs/)
+- [SWR](https://swr.vercel.app/)
+- [OpenWeatherMap API](https://openweathermap.org/api)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ▶️ Live Demo
+[View on Vercel](https://your-vercel-deployment-url.vercel.app/)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🖥️ How to run locally
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/weather-dashboard.git
+   cd weather-dashboard
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Set up environment variables:**
+   - Create a `.env.local` file in the root directory.
+   - Add your OpenWeatherMap API key:
+     ```env
+     NEXT_PUBLIC_WEATHER_API_KEY=your_api_key_here
+     ```
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+5. **Open [http://localhost:3000](http://localhost:3000) in your browser.**
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Notes / Assumptions
+- **API Key Security:** The OpenWeatherMap API key is required. For public deployments, consider using a Next.js API route as a proxy for better security, even though the key is not highly sensitive.
+- **Design Decisions:**
+  - Zustand is used for simple, global state management (search history, units, etc.)
+  - SWR is used for efficient data fetching and caching.
+  - All weather icons use Next.js `<Image />` for optimization.
+  - The UI is built with accessibility and keyboard navigation in mind.
+  - Animations and transitions are handled via Tailwind CSS for a smooth user experience.
+- **Error Handling:** The app displays user-friendly error messages and only shows errors after a search is performed.
+- **Responsiveness:** The layout adapts to all device sizes, with dark mode support.

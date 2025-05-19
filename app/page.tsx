@@ -1,103 +1,121 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import SearchBar from './components/SearchBar';
+import SearchHistory from './components/SearchHistory';
+import WeatherDisplay from './components/WeatherDisplay';
+import ForecastDisplay from './components/ForecastDisplay';
+import ErrorDisplay from './components/ErrorDisplay';
+import LoadingSpinner from './components/LoadingSpinner';
+import { useWeatherStore } from './store/weatherStore';
+import { useWeatherQuery } from './hooks/useWeatherQuery';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // Zustand store for global state management (city, history, units)
+  const {
+    searchHistory,
+    units,
+    setCity,
+    toggleUnits,
+    clearHistory
+  } = useWeatherStore();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Local state for the search input and the last submitted city
+  const [searchCity, setSearchCity] = useState('');
+  const [submittedCity, setSubmittedCity] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  // Persist dark mode preference
+  useEffect(() => {
+    const stored = localStorage.getItem('weather-dark-mode');
+    if (stored) setDarkMode(stored === 'true');
+  }, []);
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    localStorage.setItem('weather-dark-mode', String(darkMode));
+  }, [darkMode]);
+
+  // Fetch weather and forecast data for the submitted city using SWR
+  const {
+    weatherData,
+    forecastData,
+    isLoading,
+    error,
+    lastUpdated
+  } = useWeatherQuery(submittedCity, units);
+
+  // Handle search from the input (triggered by button or Enter)
+  const handleSearch = (city: string) => {
+    setSubmittedCity(city); // triggers data fetch
+    setCity(city); // updates global state and history
+    setHasSearched(true);
+  };
+
+  // When a history item is clicked, update both input and fetch
+  const handleSelectFromHistory = (city: string) => {
+    setSubmittedCity(city);
+    setSearchCity(city);
+    setCity(city);
+    setHasSearched(true);
+  };
+
+  return (
+    <main className={
+      `min-h-screen flex items-center justify-center transition-colors duration-300 ` +
+      (darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-blue-100 to-blue-300')
+    }>
+      <div className={
+        `w-full max-w-lg p-8 rounded-2xl shadow-2xl transition-colors duration-300 ` +
+        (darkMode ? 'bg-gray-900 text-white' : 'bg-white')
+      }>
+        {/* Dark mode toggle button */}
+        <button
+          className={
+            'absolute top-4 right-4 px-3 py-1 rounded-full font-semibold shadow ' +
+            (darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300')
+          }
+          onClick={() => setDarkMode((d) => !d)}
+          aria-label="Toggle dark mode"
+        >
+          {darkMode ? '🌙 Dark' : '☀️ Light'}
+        </button>
+        {/* App Title */}
+        <h1 className="mb-8 text-4xl font-extrabold text-center text-blue-700 dark:text-blue-300 drop-shadow">Weather Dashboard</h1>
+        <div className="flex flex-col items-center w-full">
+          {/* Search bar with controlled input */}
+          <SearchBar
+            value={searchCity}
+            onChange={setSearchCity}
+            onSearch={handleSearch}
+            isLoading={isLoading}
+          />
+          {/* Search history (last 5 cities, clickable) */}
+          <SearchHistory 
+            history={searchHistory} 
+            onSelect={handleSelectFromHistory} 
+            onClearHistory={clearHistory} 
+          />
+          {/* Loading spinner */}
+          {isLoading && <LoadingSpinner />}
+          {/* Error message for invalid city or API error */}
+          <ErrorDisplay error={error} hasSearched={hasSearched} />
+          {/* Weather and forecast display (only if data is available and no error) */}
+          {weatherData && !error && (
+            <>
+              <WeatherDisplay
+                data={weatherData}
+                units={units}
+                onToggleUnits={toggleUnits}
+                lastUpdated={lastUpdated}
+              />
+              {forecastData && forecastData.length > 0 && (
+                <ForecastDisplay forecast={forecastData} units={units} />
+              )}
+            </>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
