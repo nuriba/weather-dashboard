@@ -29,7 +29,7 @@ A modern, responsive weather dashboard built with Next.js, TypeScript, and Tailw
 ---
 
 ## ▶️ Live Demo
-[View on Vercel](https://your-vercel-deployment-url.vercel.app/)
+[View on Vercel]([https://your-vercel-deployment-url.vercel.app/](https://weather-dashboard-three-chi.vercel.app/))
 
 ---
 
