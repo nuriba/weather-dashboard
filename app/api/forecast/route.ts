@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     return NextResponse.json(dailyForecasts);
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch forecast data' },
+      { error: `Failed to fetch forecast data: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }

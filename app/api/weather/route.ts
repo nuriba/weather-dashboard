@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch weather data' },
+      { error: `Failed to fetch weather data: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }
