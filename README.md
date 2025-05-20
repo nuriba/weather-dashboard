@@ -15,9 +15,7 @@ A modern, responsive weather dashboard built with Next.js, TypeScript, and Tailw
 - **Weather icons** with image optimization
 - **Keyboard accessible** and accessible for screen readers
 - **Animated transitions** for a polished UI
-
-### Note: 
-I have tried to add a button to toggle between light and dark mode, but I got some errors. Therefore, I leave the web app as it.
+I have tried to add a toggling between dark and light mode. However, I got some errors. Therefore, I leave as it
 ---
 
 ## 🛠 Tech Stack
