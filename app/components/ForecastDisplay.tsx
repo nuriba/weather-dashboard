@@ -19,7 +19,7 @@ export default function ForecastDisplay({ forecast, units }: ForecastDisplayProp
               {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
             </p>
             <Image
-              src={`http://openweathermap.org/img/wn/${day.icon}.png`}
+              src={`https://openweathermap.org/img/wn/${day.icon}.png`}
               alt={day.condition}
               width={50}
               height={50}
