@@ -4,7 +4,6 @@ const config: Config = {
   // Configure content paths for Tailwind to scan
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   // Enable dark mode using class strategy

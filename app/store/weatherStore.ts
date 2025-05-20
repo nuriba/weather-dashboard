@@ -17,9 +17,7 @@ export const useWeatherStore = create<WeatherState>()(
   persist(
     (set, get) => ({
       city: '',
-      searchHistory: typeof window !== 'undefined' 
-        ? JSON.parse(localStorage.getItem('searchHistory') || '[]') 
-        : [],
+      searchHistory: [],
       units: 'metric',
       
       setCity: (city: string) => {
@@ -32,10 +30,6 @@ export const useWeatherStore = create<WeatherState>()(
             ...state.searchHistory.filter((c) => c !== city),
           ].slice(0, 5),
         }));
-        
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('searchHistory', JSON.stringify(get().searchHistory));
-        }
       },
       
       toggleUnits: () => {
