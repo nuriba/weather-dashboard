@@ -26,7 +26,7 @@ export default function WeatherDisplay({ data, units, onToggleUnits, lastUpdated
           <p className="text-gray-600 dark:text-gray-300 capitalize">{data.condition}</p>
         </div>
         <Image
-          src={`http://openweathermap.org/img/wn/${data.icon}@2x.png`}
+          src={`https://openweathermap.org/img/wn/${data.icon}@2x.png`}
           alt={data.condition}
           width={100}
           height={100}
